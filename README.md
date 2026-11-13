@@ -67,12 +67,6 @@ Virtual Network Editor (run as Administrator) → Change Settings
   → NAT Settings → Gateway IP: 192.168.177.2
 ```
 
-Set the network adapter of **every VM** to **VMnet8**.
-
-The VMware DHCP server serves `.128` to `.254`. The static IPs in this guide (`.10`, `.11`, `.12`) are outside that range, so they do not clash with DHCP-assigned machines.
-
-> **Isolation tip:** NAT gives internet access, which is useful for updates. When you start attacking, move the VMs to a **Host-only** network so nothing touches the internet.
-
 ---
 
 ## 3. DC01: Static IP & DNS
@@ -95,7 +89,6 @@ New-NetIPAddress -InterfaceAlias "Ethernet0" -IPAddress 192.168.177.10 -PrefixLe
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet0" -ServerAddresses 192.168.177.10
 ```
 
-> If you skip the first block and run `New-NetIPAddress` on a DHCP interface, you get `Instance MSFT_NetIPAddress already exists`.
 
 ### Rename Server
 
@@ -157,7 +150,6 @@ Paths (defaults):
 
 After the reboot, log in as `LAB\Administrator`. Its password is the one the local Administrator had before the promotion.
 
-> The **DSRM password** is a separate password used only for AD recovery mode. It does **not** work for normal logins or domain joins.
 
 ### Post-promotion Setup & Verification
 
@@ -250,7 +242,6 @@ Get-ADGroupMember -Identity "IT-Admins"
 
 ## 6. Enable SMB Share
 
-> The share is intentionally over-permissive (Everyone: Full Control) for practice.
 
 ### Method A: GUI
 
@@ -335,7 +326,6 @@ New-NetIPAddress -InterfaceAlias "Ethernet0" -IPAddress 192.168.177.12 -PrefixLe
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet0" -ServerAddresses 192.168.177.10
 ```
 
-> If you are connected over SSH to the old (DHCP) address, the session drops when the IP changes. Reconnect to the new IP or use the VMware console.
 
 ### Change the Hostname
 
@@ -403,23 +393,6 @@ Test from another machine:
 ssh thanos@192.168.177.12
 ```
 
-### (Optional) VMware Port Forwarding
-
-```
-Virtual Network Editor (as Administrator) → Change Settings → VMnet8
-  → NAT Settings → Port Forwarding → Add
-      Host port:       2223
-      Type:            TCP
-      Forwarding IP:   192.168.177.12
-      Forwarding port: 22
-```
-
-```powershell
-ssh thanos@127.0.0.1 -p 2223
-```
-
-Port forwarding is only needed for access from outside the NAT network. From the host you can connect directly to `192.168.177.12`.
-
 ### Verify Before Joining the Domain
 
 ```powershell
@@ -472,9 +445,6 @@ Test-NetConnection 192.168.177.10 -Port 389
 ---
 
 ## 9. Join Machines to the Domain
-
-> Credentials prompt: `LAB\Administrator` + the DC password (`Password1!`).
-> Use the `LAB\` prefix or `Administrator@lab.local`. A bare `Administrator` fails with *"The user name or password is incorrect"*.
 
 ### SRV01 (Server Core)
 
