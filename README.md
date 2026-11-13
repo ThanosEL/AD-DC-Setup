@@ -13,11 +13,6 @@
 9. [Join Machines to the Domain](#9-join-machines-to-the-domain)
 10. [Post-Join Configuration](#10-post-join-configuration)
 11. [Password Management](#11-password-management)
-12. [Verification Checklist](#12-verification-checklist)
-13. [Troubleshooting](#13-troubleshooting)
-14. [Snapshots & Licensing](#14-snapshots--licensing)
-15. [Next Phase: Kali Linux (Attacker)](#15-next-phase-kali-linux-attacker)
-16. [Next Phase: Intentional Vulnerabilities](#16-next-phase-intentional-vulnerabilities)
 
 ---
 
